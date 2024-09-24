@@ -66,7 +66,7 @@ class TimeSeriesHierarchicalClustering:
         self: the fitted model
         """
 
-       # INSERT YOUR CODE
+        AgglomerativeClustering(distance_matrix)
 
         return self
 

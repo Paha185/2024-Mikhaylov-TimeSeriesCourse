@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 
 def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
@@ -16,8 +17,8 @@ def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     """
     
     ed_dist = 0
-
-    # INSERT YOUR CODE
+  
+    ed_dist = np.sqrt(np.sum((ts1 - ts2)**2))
 
     return ed_dist
 
@@ -38,7 +39,7 @@ def norm_ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
 
     norm_ed_dist = 0
 
-    # INSERT YOUR CODE 11111111111111111111111111
+    # INSERT YOUR CODE
 
     return norm_ed_dist
 
@@ -60,6 +61,15 @@ def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
 
     dtw_dist = 0
 
-    # INSERT YOUR CODE
-
+    empty_array = pd.DataFrame(np.empty((len(ts1) + 1, len(ts2) + 1)))
+    empty_array.iloc[0,:] = float('inf')
+    empty_array.iloc[:,0] = float('inf')
+    empty_array.iloc[0,0] = 0
+    
+    for i in range(1, len(ts1) + 1):
+      for j in range(1, len(ts2) + 1):
+        empty_array.iloc[i,j] = (ts1[i-1] - ts2[j-1])**2 + min(empty_array.iloc[i-1,j],
+                                                                    empty_array.iloc[i,j-1],
+                                                                    empty_array.iloc[i-1,j-1])
+    dtw_dist = empty_array.iloc[-1,-1]
     return dtw_dist
