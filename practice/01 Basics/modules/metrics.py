@@ -38,7 +38,7 @@ def norm_ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
 
     norm_ed_dist = 0
 
-    # INSERT YOUR CODE
+    # INSERT YOUR CODE 11111111111111111111111111
 
     return norm_ed_dist
 
