@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-
+import matplotlib.pyplot  as plt
 # for visualization
 import plotly
 from plotly.subplots import make_subplots
@@ -54,7 +54,7 @@ def plot_ts_set(ts_set: np.ndarray, title: str = 'Input Time Series Set') -> Non
     fig.show(renderer="colab")
 
 
-def mplot2d(x: np.ndarrray, y: np.ndarrray, plot_title: str = None, x_title: str = None, y_title: str = None, trace_titles: np.ndarray = None) -> None:
+def mplot2d(x: np.ndarray, y: np.ndarray, plot_title: str = None, x_title: str = None, y_title: str = None, trace_titles: np.ndarray = None) -> None:
     """
     Multiple 2D Plots on figure for different experiments
 
@@ -103,7 +103,7 @@ def mplot2d(x: np.ndarrray, y: np.ndarrray, plot_title: str = None, x_title: str
     fig.show(renderer="colab")
 
 
-def plot_bestmatch_data(ts: np.ndarrray, query: np.ndarray) -> None:
+def plot_bestmatch_data(ts: np.ndarray, query: np.ndarray) -> None:
     """
     Visualize the input data (time series and query) for the best match task
 
@@ -120,7 +120,7 @@ def plot_bestmatch_data(ts: np.ndarrray, query: np.ndarray) -> None:
 
     fig.add_trace(go.Scatter(x=np.arange(query_len), y=query, line=dict(color=px.colors.qualitative.Plotly[1])),
                 row=1, col=1)
-    fig.add_trace(go.Scatter(x=np.arange(ts_len), y=ts, line=dict(color=px.colors.qualitative.Plotly[0])),
+    fig.add_trace(go.Scatter(x=np.arange(ts_len), y=ts, line=dict(color=px.colors.qualitative.Plotly[0])), 
                 row=1, col=2)
 
     fig.update_annotations(font=dict(size=24, color='black'))
@@ -149,7 +149,7 @@ def plot_bestmatch_data(ts: np.ndarrray, query: np.ndarray) -> None:
     fig.show(renderer="colab")
 
 
-def plot_bestmatch_results(ts: np.ndarrray, query: np.ndarrray, bestmatch_results: dict) -> None:
+def plot_bestmatch_results(ts: np.ndarray, query: np.ndarray, bestmatch_results: dict) -> None:
     """
     Visualize the best match results
 
@@ -159,11 +159,42 @@ def plot_bestmatch_results(ts: np.ndarrray, query: np.ndarrray, bestmatch_result
     query: query
     bestmatch_results: output data found by the best match algorithm
     """
-
     # INSERT YOUR CODE
+    
+    query_len = len(query)
+    ts_len = len(ts)
+    indices = bestmatch_results['indices']
+    distances = bestmatch_results['distances']
+    fig = make_subplots(rows=1, cols=2, column_widths=[0.1, 0.9], subplot_titles=("Query", "Time Series"), horizontal_spacing=0.04)
 
+    fig.add_trace(go.Scatter(x=np.arange(query_len), y=query, line=dict(color=px.colors.qualitative.Plotly[1])),
+                row=1, col=1)
+    fig.add_trace(go.Scatter(x=np.arange(ts_len), y=ts, line=dict(color=px.colors.qualitative.Plotly[0])),
+                row=1, col=2)
+    
+    for i, idx in enumerate(indices):
+        start = idx
+        end = start + len(query)
+        fig.add_trace(go.Scatter(x=np.arange(start, end), y=ts[start:end], line=dict(color=px.colors.qualitative.Plotly[i+2]), 
+        name=f'Best Match {i+1} (distance: {distances[i]:.2f})'),
+        row=1, col=2)
 
-def pie_chart(labels: np.ndarrray, values: np.ndarrray, plot_title='Pie chart') -> None:
+    fig.update_layout(
+        title='Visualization of Best Match Results',
+        xaxis_title='Index',
+        yaxis_title='Value',
+        legend_title='Legend',
+        width=800,
+        height=400
+    )
+
+    fig.show(renderer="colab")
+
+   
+  
+    
+
+def pie_chart(labels: np.ndarray, values: np.ndarray, plot_title='Pie chart') -> None:
     """
     Build the pie chart
 
