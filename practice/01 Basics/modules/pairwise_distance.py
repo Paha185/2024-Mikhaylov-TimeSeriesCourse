@@ -73,7 +73,6 @@ class PairwiseDistance:
         matrix_values = np.zeros(shape=matrix_shape)
         for i in range (len(input_data)-1):
           for j in range(i+1, len(input_data)):
-            print(i,j)
             matrix_values[i,j] = dist_func(input_data[i], input_data[j])
         
         matrix_values = np.triu(matrix_values) + np.triu(matrix_values, 1).T
