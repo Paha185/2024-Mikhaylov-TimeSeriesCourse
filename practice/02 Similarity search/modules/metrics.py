@@ -1,5 +1,5 @@
 import numpy as np
-
+import pandas as pd
 
 def ED_distance(ts1: np.ndarray, ts2: np.ndarray) -> float:
     """
@@ -62,4 +62,21 @@ def DTW_distance(ts1: np.ndarray, ts2: np.ndarray, r: float = 1) -> float:
 
     # INSERT YOUR CODE
 
+    n = len(ts1)
+    m = len(ts2)
+    
+    # Initialize the cost matrix
+    dtw_matrix = np.full((n + 1, m + 1), np.inf)
+    dtw_matrix[0, 0] = 0
+    
+    # Calculate the Sakoe-Chiba band
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            if max(1, j - int(r * n)) <= i <= min(n, j + int(r * n)):
+                cost = (ts1[i - 1] - ts2[j - 1]) ** 2
+                dtw_matrix[i, j] = cost + min(dtw_matrix[i - 1, j], dtw_matrix[i, j - 1], dtw_matrix[i - 1, j - 1])
+    
+    dtw_dist = dtw_matrix[n, m]
+
     return dtw_dist
+

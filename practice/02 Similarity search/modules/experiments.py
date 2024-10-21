@@ -51,21 +51,24 @@ def _run_experiment_dist_profile(algorithm: str, data: dict, exp_params: dict, a
     m_list = _get_param_values(exp_params, 'm')
 
     times = []
-
+    
     for n in n_list:
         for m in m_list:
             match algorithm:
                 case 'brute_force':
+                    
                     runtime_code = f"brute_force(data['ts']['{n}'], data['query']['{m}'])"
                 case 'mass3': 
+                    
                     runtime_code = f"mts.mass3(data['ts']['{n}'], data['query']['{m}'], alg_params['segment_len'])"
                 case 'mass' | 'mass2':
-                    runtime_code = f"mts.{algorithm}(data['ts']['{n}'], data['query']['{m}'])"    
+                    
+                    runtime_code = f"mts.{algorithm}(data['ts']['{n}'], data['query']['{m}'])"
             try:
                 time = timeit.timeit(stmt=runtime_code, number=1, globals={**globals(), **locals()})
             except:
                 time = np.nan
-
+          
             times.append(time)
     
     return np.array(times)
@@ -90,7 +93,6 @@ def _run_experiment_best_match(algorithm: str, data: dict, exp_params: dict, alg
     n_list = _get_param_values(exp_params, 'n')
     m_list = _get_param_values(exp_params, 'm')
     r_list = _get_param_values(exp_params, 'r')
-
     times = []
 
     for r in r_list:
@@ -109,9 +111,8 @@ def _run_experiment_best_match(algorithm: str, data: dict, exp_params: dict, alg
                     time = timeit.timeit(stmt=runtime_code, number=1, globals={**globals(), **locals()})
                 except:
                     time = np.nan
-
                 r_times.append(time)
-
+        print(r)
         times.append(r_times)
 
     return np.array(times)

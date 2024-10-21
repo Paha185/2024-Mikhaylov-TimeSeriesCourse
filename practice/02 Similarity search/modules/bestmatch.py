@@ -4,6 +4,7 @@ import copy
 
 from modules.utils import sliding_window, z_normalize
 from modules.metrics import DTW_distance
+from sktime.distances import distance
 
 
 def apply_exclusion_zone(array: np.ndarray, idx: int, excl_zone: int) -> np.ndarray:
@@ -155,7 +156,18 @@ class NaiveBestMatchFinder(BestMatchFinder):
         }
         
         # INSERT YOUR CODE
-
+        for i in range(N):
+            if self.is_normalize:
+                T = z_normalize(ts_data[i])
+        
+            dist = DTW_distance(query, T, self.r)
+        
+            if dist < bsf:
+                dist_profile[i] = dist
+                bestmatch = topK_match(dist_profile, excl_zone, self.topK, bsf)
+                
+                if 'distance' in bestmatch and len(bestmatch['distance']) == self.topK: 
+                    bsf = max(bestmatch['distance'])
         return bestmatch
 
 
